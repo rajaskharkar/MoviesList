@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -25,7 +27,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity{
-    public static ListView listView;
+    public static RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         final Context context=this;
@@ -33,7 +35,8 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         String url="https://api.androidhive.info/json/movies.json";
-        listView=(ListView) findViewById(R.id.moviesListView);
+        recyclerView=(RecyclerView) findViewById(R.id.moviesRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         GetJSONData getJSONData= new GetJSONData(context);
         getJSONData.execute();
     }

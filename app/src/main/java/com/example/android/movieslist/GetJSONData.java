@@ -60,8 +60,8 @@ public class GetJSONData extends AsyncTask<Void, Void, Void> {
             jsonObjectArrayList.add(jsonObject);
         }
 
-        MovieListAdapter movieListAdapter=new MovieListAdapter(mContext, R.layout.movie_adapter_row, jsonObjectArrayList);
-        MainActivity.listView.setAdapter(movieListAdapter);
+        MovieListRecyclerViewAdapter movieListRecyclerViewAdapter= new MovieListRecyclerViewAdapter(jsonObjectArrayList, mContext);
+        MainActivity.recyclerView.setAdapter(movieListRecyclerViewAdapter);
         //movie adapter
 //        final FriendsListAdapter friendsListAdapter = new FriendsListAdapter(this, R.layout.friends_list_row, currentUserFriendsAL);
 //        friendsLV.setAdapter(friendsListAdapter);

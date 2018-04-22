@@ -44,6 +44,8 @@ public class MovieListAdapter extends ArrayAdapter<JsonObject> {
     public MovieListAdapter(@NonNull Context context, int resource, @NonNull ArrayList<JsonObject> jsonObjects) {
         super(context, resource, jsonObjects);
         this.jsonObjects= jsonObjects;
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext()).build();
+        com.nostra13.universalimageloader.core.ImageLoader.getInstance().init(config);
     }
 
     @NonNull
@@ -91,8 +93,6 @@ public class MovieListAdapter extends ArrayAdapter<JsonObject> {
     private void loadImage(String imageURLString, int position, View view) {
         imageURLString = removeQuotes(imageURLString);
         final ImageView imageView= (ImageView) view.findViewById(R.id.logoID);
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext()).build();
-        com.nostra13.universalimageloader.core.ImageLoader.getInstance().init(config);
         com.nostra13.universalimageloader.core.ImageLoader imageLoader= com.nostra13.universalimageloader.core.ImageLoader.getInstance();
         imageLoader.loadImage(imageURLString, new SimpleImageLoadingListener(){
 
