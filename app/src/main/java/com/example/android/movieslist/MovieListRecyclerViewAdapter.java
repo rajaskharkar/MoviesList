@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.gson.JsonObject;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ public class MovieListRecyclerViewAdapter extends RecyclerView.Adapter<MovieList
 
     private ArrayList<JsonObject> jsonObjects;
     private Context context;
+    ImageLoader imageLoader;
+
 
     public MovieListRecyclerViewAdapter(ArrayList<JsonObject> jsonObjects, Context context) {
         this.jsonObjects=jsonObjects;
@@ -29,6 +32,7 @@ public class MovieListRecyclerViewAdapter extends RecyclerView.Adapter<MovieList
     private void initializeImageLoader() {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context).build();
         com.nostra13.universalimageloader.core.ImageLoader.getInstance().init(config);
+        imageLoader= com.nostra13.universalimageloader.core.ImageLoader.getInstance();
     }
 
     @Override
@@ -74,7 +78,6 @@ public class MovieListRecyclerViewAdapter extends RecyclerView.Adapter<MovieList
 
     private void loadImage(String imageURLString, final MovieListRecyclerViewAdapter.ViewHolder holder) {
         imageURLString = removeQuotes(imageURLString);
-        com.nostra13.universalimageloader.core.ImageLoader imageLoader= com.nostra13.universalimageloader.core.ImageLoader.getInstance();
         imageLoader.loadImage(imageURLString, new SimpleImageLoadingListener(){
 
             @Override
