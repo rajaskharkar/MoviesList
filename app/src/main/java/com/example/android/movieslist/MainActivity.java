@@ -27,17 +27,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity{
-    public static RecyclerView recyclerView;
+    private static RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         final Context context=this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        String url="https://api.androidhive.info/json/movies.json";
         recyclerView=(RecyclerView) findViewById(R.id.moviesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        GetJSONData getJSONData= new GetJSONData(context);
+        GetJSONData getJSONData= new GetJSONData(context, recyclerView);
         getJSONData.execute();
     }
 }

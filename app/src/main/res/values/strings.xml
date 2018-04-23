@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">MoviesList</string>
+    <string name="data_url">https://api.androidhive.info/json/movies.json</string>
+    <string name="get_request">GET</string>
+
+    <!--JSON keys-->
+    <string name="title_key">title</string>
+    <string name="rating_key">rating</string>
+    <string name="release_year_key">releaseYear</string>
+    <string name="genre_key">genre</string>
+    <string name="image_key">image</string>
+
+    <!--Movie details-->
+    <string name="rating_movie_details">Rating:\u0020</string>
+    <string name="release_year_movie_details">Release Year:\u0020</string>
+    <string name="genre_movie_details">Genre:\u0020</string>
 </resources>

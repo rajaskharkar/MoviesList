@@ -25,6 +25,10 @@ public class MovieListRecyclerViewAdapter extends RecyclerView.Adapter<MovieList
     public MovieListRecyclerViewAdapter(ArrayList<JsonObject> jsonObjects, Context context) {
         this.jsonObjects=jsonObjects;
         this.context=context;
+        initializeImageLoader();
+    }
+
+    private void initializeImageLoader() {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context).build();
         com.nostra13.universalimageloader.core.ImageLoader.getInstance().init(config);
     }
@@ -39,33 +43,51 @@ public class MovieListRecyclerViewAdapter extends RecyclerView.Adapter<MovieList
     @Override
     public void onBindViewHolder(MovieListRecyclerViewAdapter.ViewHolder holder, int position) {
         JsonObject jsonObject=jsonObjects.get(position);
-        String title=jsonObject.get("title").toString();
+        String title=jsonObject.get(context.getString(R.string.title_key)).toString();
+        Float rating=Float.parseFloat(jsonObject.get(context.getResources().getString(R.string.rating_key)).toString());
+        Integer releaseYear= Integer.parseInt(jsonObject.get(context.getResources().getString(R.string.release_year_key)).toString());
+        String genresFromJson= jsonObject.get(context.getResources().getString(R.string.genre_key)).toString();
+        String imageURLString= jsonObject.get(context.getResources().getString(R.string.image_key)).toString();
+
         title=removeQuotes(title);
-        Float rating=Float.parseFloat(jsonObject.get("rating").toString());
-        Integer releaseYear= Integer.parseInt(jsonObject.get("releaseYear").toString());
-        String genres= jsonObject.get("genre").toString();
+        String genres= cleanGenresFromJson(genresFromJson);
+
+        holder.movieTitleTextView.setText(title);
+        holder.movieRatingTextView.setText(context.getResources().getString(R.string.rating_movie_details)+rating.toString());
+        holder.releaseYearTextView.setText(context.getResources().getString(R.string.release_year_movie_details)+releaseYear.toString());
+        holder.genresTextView.setText(context.getResources().getString(R.string.genre_movie_details)+genres);
+
+        loadImage(imageURLString, holder);
+    }
+
+    private String cleanGenresFromJson(String genresFromJson) {
         String genresFinal="";
         Pattern p = Pattern.compile("\"([^\"]*)\"");
-        Matcher m = p.matcher(genres);
-        int counter=0;
+        Matcher m = p.matcher(genresFromJson);
         while (m.find()) {
-            counter+=1;
             genresFinal=genresFinal+(m.group(1))+ ", ";
         }
         genresFinal= genresFinal.substring(0, genresFinal.length()-2);
         genresFinal=genresFinal+".";
-        holder.movieTitleTextView.setText(title);
-        holder.movieRatingTextView.setText("Rating: "+rating.toString());
-        holder.releaseYearTextView.setText("Release Year: "+releaseYear.toString());
-        holder.genresTextView.setText("Genre: "+genresFinal);
-
-        String imageURLString= jsonObject.get("image").toString();
-        loadImage(imageURLString, position, holder);
+        return genresFinal;
     }
 
     private String removeQuotes(String string) {
         string= string.substring(1, string.length()-1);
         return string;
+    }
+
+    private void loadImage(String imageURLString, final MovieListRecyclerViewAdapter.ViewHolder holder) {
+        imageURLString = removeQuotes(imageURLString);
+        com.nostra13.universalimageloader.core.ImageLoader imageLoader= com.nostra13.universalimageloader.core.ImageLoader.getInstance();
+        imageLoader.loadImage(imageURLString, new SimpleImageLoadingListener(){
+
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                super.onLoadingComplete(imageUri, view, loadedImage);
+                holder.imageView.setImageBitmap(loadedImage);
+            }
+        });
     }
 
     @Override
@@ -84,24 +106,11 @@ public class MovieListRecyclerViewAdapter extends RecyclerView.Adapter<MovieList
         public ViewHolder(View view) {
             super(view);
 
-            //viewholder pattern in lv
-            movieTitleTextView=(TextView) view.findViewById(R.id.movieTitleID);
-            movieRatingTextView=(TextView) view.findViewById(R.id.movieRatingID);
-            releaseYearTextView=(TextView) view.findViewById(R.id.movieReleaseYearID);
-            genresTextView=(TextView) view.findViewById(R.id.movieGenreID);
-            imageView= (ImageView) view.findViewById(R.id.logoID);
+            movieTitleTextView= view.findViewById(R.id.movieTitleID);
+            movieRatingTextView= view.findViewById(R.id.movieRatingID);
+            releaseYearTextView= view.findViewById(R.id.movieReleaseYearID);
+            genresTextView= view.findViewById(R.id.movieGenreID);
+            imageView= view.findViewById(R.id.logoID);
         }
-    }
-    private void loadImage(String imageURLString, int position, final MovieListRecyclerViewAdapter.ViewHolder holder) {
-        imageURLString = removeQuotes(imageURLString);
-        com.nostra13.universalimageloader.core.ImageLoader imageLoader= com.nostra13.universalimageloader.core.ImageLoader.getInstance();
-        imageLoader.loadImage(imageURLString, new SimpleImageLoadingListener(){
-
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                super.onLoadingComplete(imageUri, view, loadedImage);
-                holder.imageView.setImageBitmap(loadedImage);
-            }
-        });
     }
 }

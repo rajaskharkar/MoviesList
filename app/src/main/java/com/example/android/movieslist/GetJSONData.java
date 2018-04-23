@@ -2,18 +2,12 @@ package com.example.android.movieslist;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.JsonReader;
-import android.widget.Toast;
+import android.support.v7.widget.RecyclerView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,10 +20,12 @@ import java.util.ArrayList;
 public class GetJSONData extends AsyncTask<Void, Void, Void> {
 
     private Context mContext;
+    private RecyclerView recyclerView;
     String jsonData="";
 
-    public GetJSONData (Context context){
+    public GetJSONData (Context context, RecyclerView recyclerView){
         mContext = context;
+        this.recyclerView=recyclerView;
     }
 
     @Override
@@ -37,7 +33,6 @@ public class GetJSONData extends AsyncTask<Void, Void, Void> {
         try {
             jsonData=getJsonObjectFromURL();
         } catch (IOException e) {
-           // Toast.makeText(mContext, "catch failed", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
         return null;
@@ -46,12 +41,10 @@ public class GetJSONData extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        //Toast.makeText(mContext, jsonData, Toast.LENGTH_SHORT).show();
         display(jsonData);
     }
 
     private void display(String jsonData) {
-        Gson gson = new GsonBuilder().setLenient().create();
         JsonParser parser= new JsonParser();
         JsonArray jsonArray= parser.parse(jsonData).getAsJsonArray();
         ArrayList<JsonObject> jsonObjectArrayList= new ArrayList<>();
@@ -59,26 +52,26 @@ public class GetJSONData extends AsyncTask<Void, Void, Void> {
             JsonObject jsonObject=jsonElement.getAsJsonObject();
             jsonObjectArrayList.add(jsonObject);
         }
-
         MovieListRecyclerViewAdapter movieListRecyclerViewAdapter= new MovieListRecyclerViewAdapter(jsonObjectArrayList, mContext);
-        MainActivity.recyclerView.setAdapter(movieListRecyclerViewAdapter);
-        //movie adapter
-//        final FriendsListAdapter friendsListAdapter = new FriendsListAdapter(this, R.layout.friends_list_row, currentUserFriendsAL);
-//        friendsLV.setAdapter(friendsListAdapter);
+        recyclerView.setAdapter(movieListRecyclerViewAdapter);
     }
 
     public String getJsonObjectFromURL() throws IOException {
-        String data="";
-        URL url= new URL("https://api.androidhive.info/json/movies.json");
+        URL url= new URL(mContext.getResources().getString(R.string.data_url));
         HttpURLConnection urlConnection=(HttpURLConnection) url.openConnection();
-        urlConnection.setRequestMethod("GET");
-//        urlConnection.setReadTimeout(10000);
-//        urlConnection.setConnectTimeout(15000);
-//        urlConnection.setDoOutput(true);
-//        urlConnection.connect();
+        urlConnection.setRequestMethod(mContext.getResources().getString(R.string.get_request));
+        urlConnection.setReadTimeout(10000);
+        urlConnection.setConnectTimeout(15000);
+        urlConnection.connect();
+        String data=getData(urlConnection);
+        return data;
+    }
+
+    private String getData(HttpURLConnection urlConnection) throws IOException {
+        String data="";
         InputStream inputStream= urlConnection.getInputStream();
         BufferedReader bufferedReader= new BufferedReader(new InputStreamReader(inputStream));
-        String line="rajas";
+        String line="sample";
         while(line!=null){
             line=bufferedReader.readLine();
             data=data+line;
