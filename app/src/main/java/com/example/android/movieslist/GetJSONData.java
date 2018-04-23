@@ -3,12 +3,10 @@ package com.example.android.movieslist;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +19,7 @@ public class GetJSONData extends AsyncTask<Void, Void, Void> {
 
     private Context mContext;
     private RecyclerView recyclerView;
-    String jsonData="";
+    private String jsonData="";
 
     public GetJSONData (Context context, RecyclerView recyclerView){
         mContext = context;
@@ -31,7 +29,7 @@ public class GetJSONData extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids){
         try {
-            jsonData=getJsonObjectFromURL();
+            jsonData=getJsonObjectFromURL(); //gets JSON data as a String from URL
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -41,7 +39,7 @@ public class GetJSONData extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        display(jsonData);
+        display(jsonData); //parses JSON data and passes it to the recycler view's adapter to be displayed
     }
 
     private void display(String jsonData) {

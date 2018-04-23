@@ -8,11 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.google.gson.JsonObject;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,15 +46,12 @@ public class MovieListRecyclerViewAdapter extends RecyclerView.Adapter<MovieList
         Integer releaseYear= Integer.parseInt(jsonObject.get(context.getResources().getString(R.string.release_year_key)).toString());
         String genresFromJson= jsonObject.get(context.getResources().getString(R.string.genre_key)).toString();
         String imageURLString= jsonObject.get(context.getResources().getString(R.string.image_key)).toString();
-
         title=removeQuotes(title);
         String genres= cleanGenresFromJson(genresFromJson);
-
         holder.movieTitleTextView.setText(title);
         holder.movieRatingTextView.setText(context.getResources().getString(R.string.rating_movie_details)+rating.toString());
         holder.releaseYearTextView.setText(context.getResources().getString(R.string.release_year_movie_details)+releaseYear.toString());
         holder.genresTextView.setText(context.getResources().getString(R.string.genre_movie_details)+genres);
-
         loadImage(imageURLString, holder);
     }
 
@@ -105,7 +100,6 @@ public class MovieListRecyclerViewAdapter extends RecyclerView.Adapter<MovieList
 
         public ViewHolder(View view) {
             super(view);
-
             movieTitleTextView= view.findViewById(R.id.movieTitleID);
             movieRatingTextView= view.findViewById(R.id.movieRatingID);
             releaseYearTextView= view.findViewById(R.id.movieReleaseYearID);
